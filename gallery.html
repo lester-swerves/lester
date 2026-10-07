@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery — DE LA CRUZ</title>
+<meta name="description" content="A collection of photos and memories.">
+<meta name="theme-color" content="#050505">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+<style>
+:root{--black:#050505;--black-soft:#0A0A0A;--surface:#111713;--surface-light:#172019;
+--green-dark:#276416;--green-main:#78e23a;--green-light:#33ff00;--green-neon:#54fd3e;
+--white:#F5F5F5;--gray:#A1A1AA;--gray-dark:#52525B;--line:rgba(34,197,94,.18);
+--font:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font:400 1.05rem/1.7 var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--green-neon);outline-offset:3px}
+.wrap{width:min(1200px,90%);margin:0 auto}
+p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
+.label{color:var(--green-main);font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.8rem}
+
+/* particles background: fixed, behind all content, never blocks clicks */
+#particles-js{position:fixed;inset:0;z-index:0;pointer-events:none}
+#particles-js canvas{display:block;width:100%;height:100%}
+main,.foot{position:relative;z-index:1}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.1rem 5%;border-bottom:1px solid var(--line);background:rgba(5,5,5,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .4s var(--ease)}
+.nav.hide{transform:translateY(-100%)}
+.nav img{width:100px;display:block}
+.nav nav{display:flex;gap:2rem}
+.nav nav a{position:relative;font-size:.9rem;color:var(--gray);transition:color .3s;padding:.3rem 0}
+.nav nav a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--green-main);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
+.nav nav a:hover,.nav nav a.on{color:var(--white)}.nav nav a:hover::after,.nav nav a.on::after{transform:scaleX(1);transform-origin:left}
+.burger{display:none;background:none;border:0;width:44px;height:44px;cursor:pointer;position:relative}
+.burger span{position:absolute;left:10px;right:10px;height:2px;background:var(--white);transition:.3s}
+.burger span:first-child{top:17px}.burger span:last-child{top:25px}
+.burger[aria-expanded=true] span:first-child{top:21px;transform:rotate(45deg)}.burger[aria-expanded=true] span:last-child{top:21px;transform:rotate(-45deg)}
+
+/* page head */
+.head{padding:9rem 0 3rem}
+.head h1{font-size:clamp(2.6rem,8vw,6rem);line-height:1;font-weight:700;letter-spacing:-.03em;margin-bottom:1.2rem}
+.head h1 span{color:transparent;-webkit-text-stroke:2px var(--green-main)}
+
+/* gallery grid */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;padding-bottom:6rem}
+.item{position:relative;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--line);background:var(--surface);cursor:pointer;padding:0;transition:border-color .4s,box-shadow .4s,transform .4s var(--ease)}
+.item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease)}
+.item:hover,.item:focus-visible{border-color:var(--green-main);box-shadow:0 14px 40px rgba(34,197,94,.14);transform:translateY(-6px)}
+.item:hover img{transform:scale(1.06)}
+.num{position:absolute;left:.8rem;bottom:.8rem;background:rgba(5,5,5,.75);color:var(--green-main);font-size:.8rem;padding:.1rem .6rem;border:1px solid var(--line)}
+
+/* lightbox (always on top) */
+.lb{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(5,5,5,.94);padding:3.5rem 4rem}
+.lb.open{display:flex}
+.lb figure{max-width:100%;max-height:100%;display:grid;gap:.8rem;justify-items:center}
+.lb img{max-width:100%;max-height:78vh;object-fit:contain;border:1px solid var(--line)}
+.lb figcaption{color:var(--gray);font-size:.9rem;letter-spacing:.1em}
+.lb button{position:absolute;width:46px;height:46px;display:grid;place-items:center;background:var(--black);border:1px solid var(--green-main);color:var(--green-main);font-size:1.2rem;cursor:pointer;transition:.3s}
+.lb button:hover{background:var(--green-main);color:#000}
+.lb .x{top:1rem;right:1rem}.lb .p{left:1rem;top:50%;translate:0 -50%}.lb .n{right:1rem;top:50%;translate:0 -50%}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding:2rem 0;color:var(--gray);font-size:.85rem}
+.foot .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+
+@media(max-width:860px){
+ .burger{display:block;z-index:2}
+ .nav nav{position:fixed;inset:0 0 0 30%;background:rgba(5,5,5,.97);flex-direction:column;justify-content:center;padding:2rem;gap:1.6rem;transform:translateX(100%);transition:transform .45s var(--ease);border-left:1px solid var(--line)}
+ .nav nav.open{transform:none}.nav nav a{font-size:1.3rem}
+ .lb{padding:4rem 1rem}
+ .gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+}
+@media(max-width:520px){.foot .wrap{flex-direction:column}.nav nav{inset:0 0 0 15%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+
+</style>
+</head>
+<body>
+
+<div id="particles-js" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+<img src="image/logo1.png" alt="DE LA CRUZ logo"></a>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+  <nav id="menu" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Me</a>
+    <a href="gallery.html" class="on">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="head">
+    <div class="wrap">
+      <p class="label">Gallery</p>
+      <h1>My <span>photos.</span></h1>
+      <p>A collection of photos and memories. Click any photo to view it larger.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="gallery" id="gallery"></div>
+  </div>
+</main>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="x" id="close" aria-label="Close">✕</button>
+  <button class="p" id="prev" aria-label="Previous photo">←</button>
+  <figure><img id="lbImg" src="" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="n" id="next" aria-label="Next photo">→</button>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Personal digital space</span>
+    <span>© 2026 DE LA CRUZ. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+// ---- EDIT HERE: folder name and your photo file names ----
+const FOLDER = 'image';   // use the same folder name for ALL photos
+const PHOTOS = ['1.jfif','2.jfif','3.jfif','4.jfif','5.jfif','6.jfif','7.jfif','8.jfif','9.jfif','10.jfif','11.jfif','12.jfif'];
+// ----------------------------------------------------------
+
+const grid = document.getElementById('gallery');
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg'), lbCap = document.getElementById('lbCap');
+const nav = document.getElementById('nav'), burger = document.getElementById('burger'), menu = document.getElementById('menu');
+let current = 0;
+
+// gallery
+PHOTOS.forEach((file, i) => {
+  const n = String(i + 1).padStart(2, '0');
+  const b = document.createElement('button');
+  b.className = 'item';
+  b.setAttribute('aria-label', 'Open photo ' + n);
+  b.innerHTML = `<img src="${FOLDER}/${file}" alt="Gallery photo ${n}" loading="lazy"><span class="num">${n}</span>`;
+  b.addEventListener('click', () => open(i));
+  grid.appendChild(b);
+});
+
+function show(i) {
+  current = (i + PHOTOS.length) % PHOTOS.length;
+  lbImg.src = `${FOLDER}/${PHOTOS[current]}`;
+  lbImg.alt = 'Gallery photo ' + (current + 1);
+  lbCap.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(PHOTOS.length).padStart(2, '0');
+}
+function open(i) { show(i); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.getElementById('close').onclick = close;
+document.getElementById('prev').onclick = () => show(current - 1);
+document.getElementById('next').onclick = () => show(current + 1);
+lb.addEventListener('click', e => { if (e.target === lb) close(); });
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') setMenu(false);
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') close();
+  if (e.key === 'ArrowLeft') show(current - 1);
+  if (e.key === 'ArrowRight') show(current + 1);
+});
+
+// mobile menu
+const setMenu = o => { menu.classList.toggle('open', o); burger.setAttribute('aria-expanded', o); burger.setAttribute('aria-label', o ? 'Close menu' : 'Open menu'); };
+burger.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+menu.addEventListener('click', e => { if (e.target.tagName === 'A') setMenu(false); });
+
+// header: hide on scroll down, show on scroll up
+let lastY = scrollY;
+addEventListener('scroll', () => {
+  const y = scrollY;
+  nav.classList.toggle('hide', y > lastY && y > 120 && !menu.classList.contains('open'));
+  lastY = y;
+}, { passive: true });
+
+// particles background (skipped when the visitor prefers reduced motion)
+addEventListener('load', () => {
+  if (typeof particlesJS === 'undefined') return;
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const mobile = matchMedia('(max-width:860px)').matches;
+  particlesJS('particles-js', {
+    particles: {
+      number: { value: mobile ? 30 : 60, density: { enable: true, value_area: 800 } },
+      color: { value: ['#78e23a', '#78e23a', '#54fd3e'] },
+      shape: { type: 'circle' },
+      opacity: { value: .55, random: true, anim: { enable: true, speed: .6, opacity_min: .2, sync: false } },
+      size: { value: 2.5, random: true },
+      line_linked: { enable: true, distance: 140, color: '#35a620', opacity: .25, width: 1 },
+      move: { enable: true, speed: 1.1, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
+    },
+    interactivity: {
+      detect_on: 'window',
+      events: { onhover: { enable: !mobile, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+      modes: { grab: { distance: 160, line_linked: { opacity: .6 } }, push: { particles_nb: 3 } }
+    },
+    retina_detect: true
+  });
+});
+</script>
+</body>
+</html>
