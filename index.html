@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DE LA CRUZ — Personal Digital Space</title>
 <meta name="description" content="DE LA CRUZ — an intern at lccb, and currently learning web developing.">
 <meta property="og:title" content="DE LA CRUZ">
@@ -13,7 +13,6 @@
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzA1MDUwNSIvPjxwYXRoIGQ9Ik05IDhoN2E4IDggMCAwMTAgMTZIOXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIyQzU1RSIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+Cg==" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- FIX: particles.js now loads from cdnjs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" defer></script>
 <style>
 /* DE LA CRUZ — black × green. Edit colours in :root. */
@@ -22,8 +21,9 @@
 --white:#F5F5F5;--gray:#A1A1AA;--gray-dark:#52525B;--line:rgba(34,197,94,.18);
 --font:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;--ease:cubic-bezier(.2,.7,.2,1)}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:70px}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
 body{background:var(--black);color:var(--white);font:400 1.05rem/1.7 var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%}
 a{color:inherit;text-decoration:none}ul,ol{list-style:none}
 :focus-visible{outline:2px solid var(--green-neon);outline-offset:3px}
 .skip{position:absolute;left:-999px;top:0;background:var(--green-main);color:#000;padding:.6rem 1rem;z-index:99}.skip:focus{left:0}
@@ -40,6 +40,7 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
 .nav.stuck{background:rgba(5,5,5,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-block:.7rem;border-color:var(--line)}
 .nav.hide{transform:translateY(-100%)}
 .logo{font-weight:700;letter-spacing:.22em;font-size:1.05rem}
+.logo-img{width:clamp(70px,10vw,110px);height:auto;display:block}
 .nav nav{display:flex;gap:2rem}
 .nav nav a{position:relative;font-size:.9rem;color:var(--gray);transition:color .3s;padding:.3rem 0}
 .nav nav a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--green-main);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
@@ -49,11 +50,28 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
 .burger span:first-child{top:17px}.burger span:last-child{top:25px}
 .burger[aria-expanded=true] span:first-child{top:21px;transform:rotate(45deg)}.burger[aria-expanded=true] span:last-child{top:21px;transform:rotate(-45deg)}
 
-/* hero (single block: banner image + particles + content) */
-.hero{position:relative;min-height:800px;overflow:hidden;background:var(--black) url("image/banner1.jpg") center/cover no-repeat}
+/* hero: banner fills the screen on any device */
+.hero{
+  position:relative;
+  width:100%;
+  height:100vh;            /* fallback for older browsers */
+  height:100svh;           /* mobile-safe: ignores the collapsing address bar */
+  min-height:480px;        /* never squashed on short / landscape screens */
+  overflow:hidden;
+  background:var(--black) url("image/banner1.jpg") center center / cover no-repeat;
+  display:grid;
+  place-items:center;
+}
 #particles-js{position:absolute;inset:0;z-index:0;pointer-events:none}
 #particles-js canvas{display:block;width:100%;height:100%}
-.hero-content{position:relative;z-index:1;text-align:center;padding-top:180px;color:white}
+.hero-content{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  color:#fff;
+  width:min(1200px,100%);
+  padding:clamp(5rem,12vh,9rem) 5% 2rem;   /* clears the fixed navbar, scales with screen */
+}
 
 /* about */
 .ph{aspect-ratio:4/5;background:linear-gradient(160deg,var(--surface-light),var(--black-soft));display:grid;place-items:center;font-size:4rem;font-weight:700;color:var(--green-dark);letter-spacing:.1em;position:relative;border:1px solid var(--line)}
@@ -71,7 +89,7 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
 .btn.solid{background:var(--green-main);color:#031007}.btn.solid:hover{background:var(--green-neon);color:#031007}
 
 /* projects */
-.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2.5rem 2rem;margin-top:3rem}
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:2.5rem 2rem;margin-top:3rem}
 .pimg{display:block;aspect-ratio:16/10;position:relative;overflow:hidden;margin-bottom:1.2rem;background:linear-gradient(135deg,var(--surface-light),var(--dark));border:1px solid var(--line)}
 .pimg span{position:absolute;inset:0;display:grid;place-items:center;font-size:5rem;font-weight:700;color:var(--green-dark);transition:transform .7s var(--ease)}
 .pimg::after{content:"View";position:absolute;inset:0;display:grid;place-items:center;background:rgba(22,163,74,.82);color:#031007;font-weight:500;letter-spacing:.2em;text-transform:uppercase;opacity:0;transition:opacity .4s}
@@ -110,21 +128,34 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
 .js .rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .js .rv.in{opacity:1;transform:none}
 
+/* tablets & phones */
 @media(max-width:860px){
  .two{grid-template-columns:1fr}
  .burger{display:block;z-index:2}
  .nav nav{position:fixed;inset:0 0 0 30%;background:rgba(5,5,5,.97);flex-direction:column;justify-content:center;padding:2rem;gap:1.6rem;transform:translateX(100%);transition:transform .45s var(--ease);border-left:1px solid var(--line)}
  .nav nav.open{transform:none}.nav nav a{font-size:1.3rem}
+ .hero{background-position:center top}   /* keep the top of the banner visible on narrow screens */
 }
 @media(max-width:520px){.btn{width:100%;text-align:center}.stats{grid-template-columns:1fr}.facts div{flex-direction:column;gap:0}.foot-row{flex-direction:column;align-items:flex-start}.projects{grid-template-columns:1fr}.nav nav{inset:0 0 0 15%}}
-@media(min-width:2000px){html{font-size:20px}}
+
+/* short landscape screens (phones turned sideways) */
+@media(max-height:520px) and (orientation:landscape){
+ .hero{min-height:100svh;height:auto}
+ .hero-content{padding-top:5rem}
+}
+
+/* very large / ultrawide screens */
+@media(min-width:2000px){
+ html{font-size:20px}
+ .hero{background-position:center 30%}
+}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}.js .rv{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 
 <header class="nav" id="nav">
-  <img src="image/logo1.png" alt="logo1" width="100">
+  <a href="index.html" aria-label="DE LA CRUZ home"><img class="logo-img" src="image/logo1.png" alt="DE LA CRUZ logo"></a>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
   <nav id="menu" aria-label="Main">
     <a href="index.html">Home</a>
@@ -139,7 +170,9 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
   <section class="hero" id="home">
     <!-- particles layer: sits above the banner image, below the content -->
     <div id="particles-js" aria-hidden="true"></div>
-    <div class="hero-content"></div>
+    <div class="hero-content">
+      <!-- your title / text / buttons go here -->
+    </div>
   </section>
 
 </main>
@@ -160,7 +193,7 @@ p{color:var(--gray);max-width:62ch;margin-bottom:1rem}
 // DE LA CRUZ — vanilla JS
 document.documentElement.classList.add('js');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const nav=$('#nav'),burger=$('#burger'),menu=$('#menu'),backTop=$('#top'); // renamed: "top" clashes with window.top
+const nav=$('#nav'),burger=$('#burger'),menu=$('#menu'),backTop=$('#top');
 
 // navbar: stuck style, hide on scroll down / show on scroll up, back-to-top button
 let lastY=scrollY;
@@ -187,9 +220,7 @@ $$('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%3)*90+'ms';io.observe(el)
 const links=$$('#menu a'),spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.hash==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
 $$('main section[id]').forEach(s=>spy.observe(s));
 
-// FIX: contact form UI only runs if the form exists on this page.
-// Before, $('#form') was null here and threw an error that stopped the
-// script before the particles code could run.
+// contact form UI only runs if the form exists on this page
 const contactForm=$('#form');
 if(contactForm){
   contactForm.addEventListener('submit',e=>{
@@ -217,7 +248,7 @@ addEventListener('load',()=>{
       move:{enable:true,speed:1.1,direction:'none',random:true,straight:false,out_mode:'out',bounce:false}
     },
     interactivity:{
-      detect_on:'window', // works even though the hero content sits above the canvas
+      detect_on:'window',
       events:{onhover:{enable:!mobile,mode:'grab'},onclick:{enable:true,mode:'push'},resize:true},
       modes:{grab:{distance:160,line_linked:{opacity:.6}},push:{particles_nb:3}}
     },
